@@ -3,10 +3,11 @@ import { SequencyService } from './services/sequency.service';
 import { SequencyController } from './controllers/sequency.controller';
 import { DatabaseModule } from '../database/database.module';
 import { DatabaseService } from '../database/database.service';
+import { AuthModule } from '../auth/auth.module';
 
 @Global()
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, AuthModule],
   controllers: [SequencyController],
   providers: [SequencyService, DatabaseService],
 })

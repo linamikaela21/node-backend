@@ -7,5 +7,10 @@ export default registerAs('config', () => {
       port: process.env.DATABASE_PORT,
       host: process.env.DATABASE_HOST,
     },
+    jwt: {
+      secret: process.env.JWT || 'Hola como estas',
+    },
   };
 });
+
+export const secret = 'Hola soy Lali'

@@ -1,22 +1,13 @@
-import {
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Res,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { Response } from 'express';
-
+import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
+import { AuthService } from '../services/auth.service';
 @Controller('auth')
 export class AuthController {
+  constructor(private authService: AuthService) {}
+
   @HttpCode(HttpStatus.ACCEPTED)
   @Get()
-  authentication(@Res() response: Response) {
-    const token = '';
-    if (!token) {
-      throw new UnauthorizedException();
-    }
-    return response.send({ message: 'Authentic correctly' });
+  async getAuth() {
+    const { accessToken } = await this.authService.getToken();
+    return accessToken;
   }
 }

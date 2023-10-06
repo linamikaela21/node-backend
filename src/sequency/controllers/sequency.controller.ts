@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { orderBy, uniq } from 'lodash/fp';
 import { SequencyService } from '../services/sequency.service';
@@ -12,7 +13,9 @@ import mongoose from 'mongoose';
 import { SequencySchema } from '../schemas/sequency.schema';
 import { ObjectId } from 'mongodb';
 import { Sequency } from '../models/sequency.entity';
+import { HaveAccessToken } from '../../auth/guards/accessToken.guard';
 
+@UseGuards(HaveAccessToken)
 @Controller('sequencies')
 export class SequencyController {
   constructor(private sequencyService: SequencyService) {}
@@ -49,6 +52,7 @@ export class SequencyController {
     return await this.sequencyService.saveSequency(newSequence);
   }
 
+  @UseGuards(HaveAccessToken)
   @Get()
   async getSequencies() {
     const sequencies: Sequency[] = await this.sequencyService.getSequencies();
