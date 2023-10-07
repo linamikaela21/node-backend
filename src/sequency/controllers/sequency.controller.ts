@@ -13,19 +13,33 @@ import mongoose from 'mongoose';
 import { SequencySchema } from '../schemas/sequency.schema';
 import { ObjectId } from 'mongodb';
 import { Sequency } from '../models/sequency.entity';
-import { HaveAccessToken } from '../../auth/guards/accessToken.guard';
+import { AuthGuard } from '@nestjs/passport';
 
-@UseGuards(HaveAccessToken)
 @Controller('sequencies')
+@UseGuards(AuthGuard('jwt'))
 export class SequencyController {
   constructor(private sequencyService: SequencyService) {}
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get()
+  async getSequences() {
+    const sequencies: Sequency[] = await this.sequencyService.getSequences();
+    if (!sequencies) return [];
+    return sequencies.map(({ subSequences }) => {
+      const originalSequency = uniq(subSequences.flat());
+      return {
+        sequence: originalSequency,
+        subSequences,
+      };
+    });
+  }
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async createSubsequence(@Body() sequence: number[]) {
     let subsequences: number[][] = [[]];
     for (const id of sequence) {
-      if (id < 0) return 'Id numbers of the sequency should be positives';
+      if (id < 0) return 'Id numbers of the sequency should be positive';
       const currentSubsequences: number[][] = [];
       for (const subsequence of subsequences) {
         const newSubsequence = [...subsequence, id];
@@ -35,10 +49,10 @@ export class SequencyController {
       }
       subsequences = [...subsequences, ...currentSubsequences];
     }
-    const orderSubsequencies = orderBy(
+    const orderSubsequences = orderBy(
       ['length'],
       ['asc'],
-      subsequences.filter((subsequence) => subsequence.length > 0),
+      subsequences.filter(subsequence => subsequence.length > 0),
     );
 
     const Sequency = mongoose.model('sequency', SequencySchema);
@@ -46,23 +60,9 @@ export class SequencyController {
     const newSequence = new Sequency({
       _id: new ObjectId(),
       createdAt: new Date().toLocaleString(),
-      subSequences: orderSubsequencies,
+      subSequences: orderSubsequences,
     });
 
     return await this.sequencyService.saveSequency(newSequence);
-  }
-
-  @UseGuards(HaveAccessToken)
-  @Get()
-  async getSequencies() {
-    const sequencies: Sequency[] = await this.sequencyService.getSequencies();
-    if (!sequencies) return [];
-    return sequencies.map(({ subSequences }) => {
-      const originalSequency = uniq(subSequences.flat());
-      return {
-        sequence: originalSequency,
-        subSequences,
-      };
-    });
   }
 }

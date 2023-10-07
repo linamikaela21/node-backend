@@ -9,7 +9,8 @@ export class SequencyService {
     @Inject(DatabaseService) private databaseService: DatabaseService,
   ) {}
 
-  async getSequencies(): Promise<Sequency[]> {
+  @HttpCode(HttpStatus.OK)
+  async getSequences(): Promise<Sequency[]> {
     const connect = await this.databaseService.getConnection();
     const db = connect.db;
     const sequencies = await db
@@ -18,16 +19,14 @@ export class SequencyService {
       .sort({ $natural: -1 })
       .limit(10)
       .toArray();
-    connect.close();
     return sequencies;
   }
 
   @HttpCode(HttpStatus.CREATED)
-  async saveSequency(@Body() SequencyDto: SequencyDto) {
-    const connect = this.databaseService.getConnection();
+  async saveSequency(@Body() sequencyDto: SequencyDto) {
+    const connect = await this.databaseService.getConnection();
     const db = connect.db;
-    await db.collection('sequencies').insertOne(SequencyDto);
-    connect.close();
+    await db.collection('sequencies').insertOne(sequencyDto);
     return 'New sequency created successfully';
   }
 }

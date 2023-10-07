@@ -1,18 +1,61 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
+import { DatabaseService } from '../../database/database.service';
 import { SequencyService } from './sequency.service';
 
 describe('SequencyService', () => {
-  let service: SequencyService;
+  describe('SequencyService', () => {
+    let service: SequencyService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [SequencyService],
-    }).compile();
+    beforeEach(async () => {
+      const module = await Test.createTestingModule({
+        providers: [
+          SequencyService,
+          {
+            provide: DatabaseService,
+            useValue: {
+              getConnection: jest.fn(),
+            },
+          },
+        ],
+      }).compile();
 
-    service = module.get<SequencyService>(SequencyService);
-  });
+      service = module.get<SequencyService>(SequencyService);
+    });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+    describe('getSequences', () => {
+      it('should be defined', () => {
+        expect(service).toBeDefined();
+      });
+
+      const sequencesResponse = [
+        {
+          id: '1',
+          createdAt: '2021-09-01T00:00:00.000Z',
+          subSequences: [[1], [2], [1, 2]],
+        },
+        {
+          id: '2',
+          createdAt: '2021-08-01T00:00:00.000Z',
+          subSequences: [[1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]],
+        },
+      ];
+
+      it('should save a sequency and return the saved sequency', async () => {
+        jest
+          .spyOn(service, 'saveSequency')
+          .mockResolvedValue('New sequency created successfully');
+        jest
+          .spyOn(service, 'getSequences')
+          .mockResolvedValue(sequencesResponse as any);
+        expect(await service.getSequences()).toEqual(sequencesResponse);
+        expect(await service.getSequences()).toEqual(sequencesResponse);
+      });
+    });
+
+    describe('saveSequency', () => {
+      it('should be defined', () => {
+        expect(service).toBeDefined();
+      });
+    });
   });
 });
