@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
-import { AccessTokenStrategy } from './strategies/accessToken.strategy';
+import { AccessTokenStrategy } from '../strategies/accessToken.strategy';
 
 @Module({
   imports: [

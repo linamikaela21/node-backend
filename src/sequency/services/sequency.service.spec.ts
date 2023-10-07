@@ -56,6 +56,20 @@ describe('SequencyService', () => {
       it('should be defined', () => {
         expect(service).toBeDefined();
       });
+
+      it('should save a sequency and return the saved sequency', async () => {
+        const newSequency = {
+          id: '1',
+          createdAt: '2021-09-01T00:00:00.000Z',
+          subSequences: [[1], [2], [1, 2]],
+        };
+        jest
+          .spyOn(service, 'saveSequency')
+          .mockResolvedValue('New sequency created successfully');
+        expect(await service.saveSequency(newSequency as any)).toEqual(
+          'New sequency created successfully',
+        );
+      });
     });
   });
 });

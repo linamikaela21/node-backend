@@ -10,10 +10,11 @@ import {
 import { orderBy, uniq } from 'lodash/fp';
 import { SequencyService } from '../services/sequency.service';
 import mongoose from 'mongoose';
-import { SequencySchema } from '../schemas/sequency.schema';
 import { ObjectId } from 'mongodb';
-import { Sequency } from '../models/sequency.entity';
+import { Sequency } from '../entity/sequency.entity';
 import { AuthGuard } from '@nestjs/passport';
+import { isArray } from 'lodash';
+import { SequencySchema } from '../schemas/sequency.schema';
 
 @Controller('sequencies')
 @UseGuards(AuthGuard('jwt'))
@@ -37,6 +38,8 @@ export class SequencyController {
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async createSubsequence(@Body() sequence: number[]) {
+    if (!isArray(sequence)) return 'Sequence should be an array';
+    if (!sequence.length) return 'Sequence should not be empty';
     let subsequences: number[][] = [[]];
     for (const id of sequence) {
       if (id < 0) return 'Id numbers of the sequency should be positive';

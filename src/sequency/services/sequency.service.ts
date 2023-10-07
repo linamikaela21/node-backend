@@ -1,6 +1,6 @@
 import { Body, HttpCode, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { DatabaseService } from '../../database/database.service';
-import { Sequency } from '../models/sequency.entity';
+import { Sequency } from '../entity/sequency.entity';
 import { SequencyDto } from '../dto/sequency.dto';
 
 @Injectable()
@@ -27,6 +27,6 @@ export class SequencyService {
     const connect = await this.databaseService.getConnection();
     const db = connect.db;
     await db.collection('sequencies').insertOne(sequencyDto);
-    return 'New sequency created successfully';
+    return `New sequency created successfully - ${sequencyDto.createdAt}`;
   }
 }

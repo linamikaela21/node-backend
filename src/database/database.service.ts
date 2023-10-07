@@ -15,18 +15,15 @@ export class DatabaseService {
   async createConnectionDB() {
     const dbPort = this.configService.database.port;
     const dbHost = this.configService.database.host;
+    const dbName = this.configService.database.name;
+
     this.dbConnection = createConnection(
-      `mongodb://${dbHost}:${dbPort}/sequencies`,
+      `mongodb://${dbHost}:${dbPort}/${dbName}`,
       {
         monitorCommands: true,
       },
     );
-
-    this.dbConnection.once('open', () => {
-      console.log('Connected to MongoDB');
-    });
   }
-
   getConnection(): Connection {
     return this.dbConnection;
   }
