@@ -1,4 +1,4 @@
 export class Sequency {
-  subSequences: number[];
-  createdAt: string;
+  subSequences: number[] = [];
+  createdAt: string = new Date().toISOString();
 }

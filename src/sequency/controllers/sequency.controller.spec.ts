@@ -44,6 +44,11 @@ describe('SequencyController', () => {
       ];
       expect(await controller.getSequences()).toEqual(sequencesResponse);
     });
+
+    it('should response with an empty array if there is not sequences', async () => {
+      sequencesResponse = [];
+      expect(await controller.getSequences()).toEqual([]);
+    });
   });
 
   describe('createSubsequence', () => {

@@ -10,7 +10,7 @@ import {
 import { orderBy, uniq } from 'lodash/fp';
 import { SequencyService } from '../services/sequency.service';
 import mongoose from 'mongoose';
-import { ObjectId } from 'mongodb';
+import { Code, ObjectId } from 'mongodb';
 import { Sequency } from '../entity/sequency.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { isArray } from 'lodash';
@@ -24,15 +24,19 @@ export class SequencyController {
   @UseGuards(AuthGuard('jwt'))
   @Get()
   async getSequences() {
-    const sequencies: Sequency[] = await this.sequencyService.getSequences();
-    if (!sequencies) return [];
-    return sequencies.map(({ subSequences }) => {
-      const originalSequency = uniq(subSequences.flat());
-      return {
-        sequence: originalSequency,
-        subSequences,
-      };
-    });
+    try {
+      const sequencies: Sequency[] = await this.sequencyService.getSequences();
+      if (!sequencies) return [];
+      return sequencies.map(({ subSequences }) => {
+        const originalSequency = uniq(subSequences.flat());
+        return {
+          sequence: originalSequency,
+          subSequences,
+        };
+      });
+    } catch (error) {
+      HttpCode(HttpStatus.BAD_REQUEST);
+    }
   }
 
   @HttpCode(HttpStatus.CREATED)
@@ -58,14 +62,18 @@ export class SequencyController {
       subsequences.filter(subsequence => subsequence.length > 0),
     );
 
-    const Sequency = mongoose.model('sequency', SequencySchema);
+    try {
+      const Sequency = mongoose.model('sequency', SequencySchema);
 
-    const newSequence = new Sequency({
-      _id: new ObjectId(),
-      createdAt: new Date().toLocaleString(),
-      subSequences: orderSubsequences,
-    });
+      const newSequence = new Sequency({
+        _id: new ObjectId(),
+        createdAt: new Date().toLocaleString(),
+        subSequences: orderSubsequences,
+      });
 
-    return await this.sequencyService.saveSequency(newSequence);
+      return await this.sequencyService.saveSequency(newSequence);
+    } catch (error) {
+      return HttpCode(HttpStatus.SERVICE_UNAVAILABLE);
+    }
   }
 }

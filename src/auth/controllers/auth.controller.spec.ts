@@ -33,16 +33,21 @@ describe('AuthController', () => {
   });
 
   describe('Post getAuth', () => {
+    let response: {};
     it('should call authService.getToken and receive 401 code if have a expired token', async () => {
       access_token = '';
+      response = {
+        message: 'You already have Bearer token',
+        token: 'accessToken',
+      };
       mockResponse = jest.fn().mockResolvedValue(HttpStatus.UNAUTHORIZED);
-
       jest.spyOn(controller, 'getAuth').mockImplementation(mockResponse);
 
       expect(await controller.getAuth({} as any).then()).toEqual(
         HttpStatus.UNAUTHORIZED,
       );
     });
+
     it('should call authService.getToken and receive a valid access_token', async () => {
       access_token = 'access_token';
       mockResponse = jest.fn().mockResolvedValue(access_token);

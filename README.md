@@ -32,6 +32,25 @@
 $ npm install
 ```
 
+## Create .env file with
+
+```bash
+# Mongo database name
+$ DATABASE_NAME
+
+# Database port - Default 27017
+$ DATABASE_PORT
+
+# Database host - Default localhost
+$ DATABASE_HOST
+
+# JWT secret world
+$ JWT_SECRET
+
+# JWT expires time - Default 10m
+$ JWT_EXPIRES_IN
+```
+
 ## Running the app
 
 ```bash

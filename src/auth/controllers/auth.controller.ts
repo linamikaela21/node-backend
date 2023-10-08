@@ -11,12 +11,6 @@ export class AuthController {
   async getAuth(@Res() res: Response) {
     try {
       const accessToken = await this.authService.getToken();
-      if (accessToken) {
-        return res.send({
-          message: 'You already have Bearer token',
-          token: accessToken,
-        });
-      }
       return res.status(HttpStatus.OK).send({
         message: 'Token Added Successfully',
         token: accessToken,
