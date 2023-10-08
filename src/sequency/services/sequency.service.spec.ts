@@ -22,12 +22,7 @@ describe('SequencyService', () => {
     sequencyService = module.get<SequencyService>(SequencyService);
     databaseService = module.get<DatabaseService>(DatabaseService);
   });
-
   describe('getSequences', () => {
-    it('should be defined', () => {
-      expect(sequencyService).toBeDefined();
-    });
-
     const sequencesResponse = [
       {
         id: '1',
@@ -40,6 +35,9 @@ describe('SequencyService', () => {
         subSequences: [[1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]],
       },
     ];
+    it('should be defined', () => {
+      expect(sequencyService).toBeDefined();
+    });
 
     it('should save an array of saved sequencies', async () => {
       jest
@@ -60,6 +58,10 @@ describe('SequencyService', () => {
         'Error getting the sequencies',
       );
     });
+    it('should return an empty array if there is not sequencies', async () => {
+      jest.spyOn(sequencyService, 'getSequences').mockResolvedValue([] as any);
+      expect(await sequencyService.getSequences()).toEqual([]);
+    });
   });
 
   describe('saveSequency', () => {
@@ -67,7 +69,7 @@ describe('SequencyService', () => {
       expect(sequencyService).toBeDefined();
     });
 
-    it('should save a sequency and return the saved sequency', async () => {
+    it('should save a sequency and return New sequency created successfully message', async () => {
       const newSequency = {
         id: '1',
         createdAt: '2021-09-01T00:00:00.000Z',

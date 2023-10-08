@@ -1,10 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import { SequencyModule } from './sequency/models/sequency.module';
+import { SequencyModule } from './sequency/module/sequency.module';
 
-async function bootstrap() {
+async function main() {
   const app = await NestFactory.create(SequencyModule);
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(3000);
 }
-bootstrap();
+main();

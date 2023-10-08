@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ConfigService, ConfigType } from '@nestjs/config';
+import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import config from '../../../config';
 
@@ -19,7 +19,7 @@ export class AuthService {
         { message: 'Log Successfully' },
         {
           secret,
-          expiresIn: expiresIn,
+          expiresIn,
         },
       ),
     ]);

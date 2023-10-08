@@ -3,7 +3,7 @@ import { SequencyService } from '../services/sequency.service';
 import { SequencyController } from '../controllers/sequency.controller';
 import { DatabaseModule } from '../../database/database.module';
 import { DatabaseService } from '../../database/database.service';
-import { AuthModule } from '../../auth/models/auth.module';
+import { AuthModule } from '../../auth/module/auth.module';
 import { AuthService } from '../../auth/services/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { AuthController } from '../../auth/controllers/auth.controller';

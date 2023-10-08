@@ -10,7 +10,7 @@ import {
 import { orderBy, uniq } from 'lodash/fp';
 import { SequencyService } from '../services/sequency.service';
 import mongoose from 'mongoose';
-import { Code, ObjectId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import { Sequency } from '../entity/sequency.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { isArray } from 'lodash';
@@ -21,7 +21,7 @@ import { SequencySchema } from '../schemas/sequency.schema';
 export class SequencyController {
   constructor(private sequencyService: SequencyService) {}
 
-  @UseGuards(AuthGuard('jwt'))
+  @HttpCode(HttpStatus.OK)
   @Get()
   async getSequences() {
     try {

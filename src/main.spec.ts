@@ -1,9 +1,9 @@
 import { Test } from '@nestjs/testing';
 import { ValidationPipe } from '@nestjs/common';
-import { SequencyModule } from './sequency/models/sequency.module';
+import { SequencyModule } from './sequency/module/sequency.module';
 import { INestApplication } from '@nestjs/common';
 
-describe('bootstrap', () => {
+describe('main', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -22,5 +22,7 @@ describe('bootstrap', () => {
 
   it('should start the application', () => {
     expect(app).toBeDefined();
+    expect(app.getHttpServer()).toBeDefined();
+    expect(app.listen(3000)).toBeDefined();
   });
 });
