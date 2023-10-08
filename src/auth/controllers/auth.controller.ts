@@ -12,7 +12,7 @@ export class AuthController {
     try {
       const accessToken = await this.authService.getToken();
       return res.status(HttpStatus.OK).send({
-        message: 'Token Added Successfully',
+        message: 'Token Created Successfully',
         token: accessToken,
       });
     } catch (error) {
