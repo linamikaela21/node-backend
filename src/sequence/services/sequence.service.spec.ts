@@ -1,15 +1,15 @@
 import { Test } from '@nestjs/testing';
 import { DatabaseService } from '../../database/database.service';
-import { SequencyService } from './sequency.service';
+import { SequenceService } from './sequence.service';
 
-describe('SequencyService', () => {
-  let sequencyService: SequencyService;
+describe('SequenceService', () => {
+  let sequenceService: SequenceService;
   let databaseService: DatabaseService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        SequencyService,
+        SequenceService,
         {
           provide: DatabaseService,
           useValue: {
@@ -19,7 +19,7 @@ describe('SequencyService', () => {
       ],
     }).compile();
 
-    sequencyService = module.get<SequencyService>(SequencyService);
+    sequenceService = module.get<SequenceService>(SequenceService);
     databaseService = module.get<DatabaseService>(DatabaseService);
   });
   describe('getSequences', () => {
@@ -36,60 +36,60 @@ describe('SequencyService', () => {
       },
     ];
     it('should be defined', () => {
-      expect(sequencyService).toBeDefined();
+      expect(sequenceService).toBeDefined();
     });
 
     it('should save an array of saved sequencies', async () => {
       jest
-        .spyOn(sequencyService, 'saveSequency')
-        .mockResolvedValue('New sequency created successfully');
+        .spyOn(sequenceService, 'saveSequence')
+        .mockResolvedValue('New sequence created successfully');
       jest
-        .spyOn(sequencyService, 'getSequences')
+        .spyOn(sequenceService, 'getSequences')
         .mockResolvedValue(sequencesResponse as any);
-      expect(await sequencyService.getSequences()).toEqual(sequencesResponse);
-      expect(await sequencyService.getSequences()).toEqual(sequencesResponse);
+      expect(await sequenceService.getSequences()).toEqual(sequencesResponse);
+      expect(await sequenceService.getSequences()).toEqual(sequencesResponse);
     });
 
     it('should throw an error if there is an error getting the sequencies', async () => {
       (databaseService.getConnection as jest.Mock).mockImplementation(() => {
         throw new Error();
       });
-      await expect(sequencyService.getSequences()).rejects.toThrowError(
+      await expect(sequenceService.getSequences()).rejects.toThrowError(
         'Error getting the sequencies',
       );
     });
     it('should return an empty array if there is not sequencies', async () => {
-      jest.spyOn(sequencyService, 'getSequences').mockResolvedValue([] as any);
-      expect(await sequencyService.getSequences()).toEqual([]);
+      jest.spyOn(sequenceService, 'getSequences').mockResolvedValue([] as any);
+      expect(await sequenceService.getSequences()).toEqual([]);
     });
   });
 
-  describe('saveSequency', () => {
+  describe('saveSequence', () => {
     it('should be defined', () => {
-      expect(sequencyService).toBeDefined();
+      expect(sequenceService).toBeDefined();
     });
 
-    it('should save a sequency and return New sequency created successfully message', async () => {
-      const newSequency = {
+    it('should save a sequence and return New sequence created successfully message', async () => {
+      const newSequence = {
         id: '1',
         createdAt: '2021-09-01T00:00:00.000Z',
         subSequences: [[1], [2], [1, 2]],
       };
       jest
-        .spyOn(sequencyService, 'saveSequency')
-        .mockResolvedValue('New sequency created successfully');
-      expect(await sequencyService.saveSequency(newSequency as any)).toEqual(
-        'New sequency created successfully',
+        .spyOn(sequenceService, 'saveSequence')
+        .mockResolvedValue('New sequence created successfully');
+      expect(await sequenceService.saveSequence(newSequence as any)).toEqual(
+        'New sequence created successfully',
       );
     });
 
-    it('should throw an error if there is an error saving the sequency', async () => {
+    it('should throw an error if there is an error saving the sequence', async () => {
       jest
-        .spyOn(sequencyService, 'saveSequency')
-        .mockRejectedValue(new Error('Error saving the sequency'));
+        .spyOn(sequenceService, 'saveSequence')
+        .mockRejectedValue(new Error('Error saving the sequence'));
       await expect(
-        sequencyService.saveSequency({} as any),
-      ).rejects.toThrowError('Error saving the sequency');
+        sequenceService.saveSequence({} as any),
+      ).rejects.toThrowError('Error saving the sequence');
     });
   });
 });

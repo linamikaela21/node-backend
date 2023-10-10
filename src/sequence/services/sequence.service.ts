@@ -1,21 +1,21 @@
 import { Body, HttpCode, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { DatabaseService } from '../../database/database.service';
-import { Sequency } from '../entity/sequency.entity';
-import { SequencyDto } from '../dto/sequency.dto';
+import { Sequence } from '../entity/sequence.entity';
+import { SequenceDto } from '../dto/sequence.dto';
 
 @Injectable()
-export class SequencyService {
+export class SequenceService {
   constructor(
     @Inject(DatabaseService) private databaseService: DatabaseService,
   ) {}
 
   @HttpCode(HttpStatus.OK)
-  async getSequences(): Promise<Sequency[]> {
+  async getSequences(): Promise<Sequence[]> {
     try {
       const connect = this.databaseService.getConnection();
       const db = connect.db;
       const sequencies = await db
-        .collection<Sequency>('sequencies')
+        .collection<Sequence>('sequencies')
         .find()
         .sort({ $natural: -1 })
         .limit(10)
@@ -27,14 +27,14 @@ export class SequencyService {
   }
 
   @HttpCode(HttpStatus.CREATED)
-  async saveSequency(@Body() sequencyDto: SequencyDto) {
+  async saveSequence(@Body() sequenceDto: SequenceDto) {
     try {
       const connect = this.databaseService.getConnection();
       const db = connect.db;
-      await db.collection('sequencies').insertOne(sequencyDto);
-      return `New sequency created successfully - ${sequencyDto.createdAt}`;
+      await db.collection('sequencies').insertOne(sequenceDto);
+      return `New sequence created successfully - ${sequenceDto.createdAt}`;
     } catch (error) {
-      throw new Error('Error saving the sequency');
+      throw new Error('Error saving the sequence');
     }
   }
 }

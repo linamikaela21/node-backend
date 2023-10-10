@@ -1,25 +1,25 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SequencyModule } from './sequency.module';
-import { SequencyService } from '../services/sequency.service';
+import { SequenceModule } from './sequence.module';
+import { SequenceService } from '../services/sequence.service';
 import { DatabaseService } from '../../database/database.service';
 import { AuthService } from '../../auth/services/auth.service';
 import { JwtService } from '@nestjs/jwt';
 
-describe('SequencyModule', () => {
-  let sequencyModule: SequencyModule;
+describe('SequenceModule', () => {
+  let sequenceModule: SequenceModule;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      imports: [SequencyModule],
-      providers: [SequencyService, DatabaseService, AuthService, JwtService],
+      imports: [SequenceModule],
+      providers: [SequenceService, DatabaseService, AuthService, JwtService],
     }).compile();
 
-    sequencyModule = app.get<SequencyModule>(SequencyModule);
+    sequenceModule = app.get<SequenceModule>(SequenceModule);
   });
 
   describe('Initialization', () => {
     it('should be defined', () => {
-      expect(sequencyModule).toBeDefined();
+      expect(sequenceModule).toBeDefined();
     });
   });
 });

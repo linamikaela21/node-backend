@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 
-export type SequencyDocument = HydratedDocument<Sequency>;
+export type SequenceDocument = HydratedDocument<Sequence>;
 
 @Schema()
-export class Sequency {
+export class Sequence {
   @Prop()
   _id: Types.ObjectId;
 
@@ -15,4 +15,4 @@ export class Sequency {
   subSequences: number[][];
 }
 
-export const SequencySchema = SchemaFactory.createForClass(Sequency);
+export const SequenceSchema = SchemaFactory.createForClass(Sequence);
