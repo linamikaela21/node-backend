@@ -1,7 +1,6 @@
 import { Body, HttpCode, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { DatabaseService } from '../../database/database.service';
 import { Sequence } from '../entity/sequence.entity';
-import { SequenceDto } from '../dto/sequence.dto';
 
 @Injectable()
 export class SequenceService {
@@ -27,7 +26,7 @@ export class SequenceService {
   }
 
   @HttpCode(HttpStatus.CREATED)
-  async saveSequence(@Body() sequenceDto: SequenceDto) {
+  async saveSequence(@Body() sequenceDto: Sequence) {
     try {
       const connect = this.databaseService.getConnection();
       const db = connect.db;

@@ -41,6 +41,8 @@ describe('AuthController', () => {
       expect(await controller.getAuth({} as any).then()).toEqual(
         HttpStatus.UNAUTHORIZED,
       );
+      expect(mockResponse).toHaveBeenCalled();
+      expect(mockResponse).toHaveBeenCalledWith({} as any);
     });
 
     it('should call authService.getToken and receive a valid access_token', async () => {
@@ -50,6 +52,8 @@ describe('AuthController', () => {
       expect(await controller.getAuth({} as any)).toEqual(
         await mockResponse({} as any),
       );
+      expect(mockResponse).toHaveBeenCalled();
+      expect(mockResponse).toHaveBeenCalledWith({} as any);
     });
   });
 });

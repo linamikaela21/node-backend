@@ -1,12 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class SequenceDto {
-  @ApiProperty({ default: new Date().toISOString() })
-  createdAt: string;
-  @ApiProperty({ required: true })
-  subSequences: number[][];
-}
-
 export class GetSequenceDto {
   @ApiProperty({ required: true, default: [] })
   sequence: number[];

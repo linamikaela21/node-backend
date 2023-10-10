@@ -14,7 +14,6 @@ import mongoose from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { Sequence } from '../entity/sequence.entity';
 import { AuthGuard } from '@nestjs/passport';
-import { isArray } from 'lodash';
 import { SequenceSchema } from '../schemas/sequence.schema';
 import {
   ApiBadRequestResponse,
@@ -53,17 +52,19 @@ export class SequenceController {
   async getSequences(@Res() res: Response) {
     try {
       const sequencies: Sequence[] = await this.sequenceService.getSequences();
-      if (!sequencies)
+      if (!sequencies.length) {
         return res.status(HttpStatus.NO_CONTENT).send({
           message: 'There are no sequencies',
         });
-      return sequencies.map(({ subSequences }) => {
+      }
+      const sequenciesArray = sequencies.map(({ subSequences }) => {
         const originalSequence = uniq(subSequences.flat());
-        return res.status(HttpStatus.OK).send({
+        return {
           sequence: originalSequence,
           subSequences,
-        });
+        };
       });
+      return res.status(HttpStatus.OK).send(sequenciesArray);
     } catch (error) {
       return HttpCode(HttpStatus.SERVICE_UNAVAILABLE);
     }
@@ -88,16 +89,16 @@ export class SequenceController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   async createSubsequence(@Body() sequence: number[], @Res() res: Response) {
-    if (!isArray(sequence)) return 'Sequence should be an array';
-    if (!sequence.length)
+    if (sequence && !sequence.length) {
       return res.status(HttpStatus.BAD_REQUEST).send({
-        message: 'Sequence should not be empty',
+        message: 'Sequence should an not empty array',
       });
+    }
     let subsequences: number[][] = [[]];
     for (const id of sequence) {
-      if (id < 0) {
+      if (id < 0 || !Number.isInteger(id)) {
         return res.status(HttpStatus.BAD_REQUEST).send({
-          message: 'Id numbers of the sequence should be positive',
+          message: 'Ids should be positives numbers',
         });
       }
       const currentSubsequences: number[][] = [];

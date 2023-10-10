@@ -29,11 +29,11 @@ describe('SequenceController', () => {
     it('should return the last 10 sequences', async () => {
       const sequences: any[] = [
         {
-          _id: '1',
+          sequence: [1, 2, 3],
           subSequences: [[1], [2], [3], [1, 2], [2, 3], [1, 3], [1, 2, 3]],
         },
         {
-          _id: '2',
+          sequence: [4, 5, 6],
           subSequences: [[4], [5], [6], [4, 5], [5, 6], [4, 6], [4, 5, 6]],
         },
       ];
@@ -47,10 +47,7 @@ describe('SequenceController', () => {
       await controller.getSequences(response);
 
       expect(response.status).toHaveBeenCalledWith(HttpStatus.OK);
-      expect(response.send).toHaveBeenCalledWith({
-        sequence: [1, 2, 3],
-        subSequences: [[1], [2], [3], [1, 2], [2, 3], [1, 3], [1, 2, 3]],
-      });
+      expect(response.send).toHaveBeenCalledWith(sequences);
     });
 
     it('should return no content if there are no sequences', async () => {
@@ -62,7 +59,11 @@ describe('SequenceController', () => {
       };
 
       await controller.getSequences(response);
-      expect(response.send).not.toHaveBeenCalled();
+      expect(response.send).toHaveBeenCalled();
+      expect(response.send).toHaveBeenCalledWith({
+        message: 'There are no sequencies',
+      });
+      expect(response.status).toHaveBeenCalledWith(HttpStatus.NO_CONTENT);
     });
 
     it('should return service unavailable if there is an error', async () => {
@@ -109,8 +110,57 @@ describe('SequenceController', () => {
       await controller.createSubsequence(sequence, response);
 
       expect(service.saveSequence).not.toHaveBeenCalled();
+      expect(response.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
       expect(response.send).toHaveBeenCalledWith({
-        message: 'Sequence should not be empty',
+        message: 'Sequence should an not empty array',
+      });
+    });
+
+    it('should return bad request if the sequence is not an array', async () => {
+      const sequence = 1 as any;
+      const response: any = {
+        status: jest.fn().mockReturnThis(),
+        send: jest.fn(),
+      };
+
+      await controller.createSubsequence(sequence, response);
+
+      expect(service.saveSequence).not.toHaveBeenCalled();
+      expect(response.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
+      expect(response.send).toHaveBeenCalledWith({
+        message: 'Sequence should an not empty array',
+      });
+    });
+
+    it('should return bad request if the id is not an integer', async () => {
+      const sequence = [1.5, 2, 3];
+      const response: any = {
+        status: jest.fn().mockReturnThis(),
+        send: jest.fn(),
+      };
+
+      await controller.createSubsequence(sequence, response);
+
+      expect(service.saveSequence).not.toHaveBeenCalled();
+      expect(response.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
+      expect(response.send).toHaveBeenCalledWith({
+        message: 'Ids should be positives numbers',
+      });
+    });
+
+    it('should return bad request if the id is not a number', async () => {
+      const sequence = ['1', 2, 3];
+      const response: any = {
+        status: jest.fn().mockReturnThis(),
+        send: jest.fn(),
+      };
+
+      await controller.createSubsequence(sequence as any, response);
+
+      expect(service.saveSequence).not.toHaveBeenCalled();
+      expect(response.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
+      expect(response.send).toHaveBeenCalledWith({
+        message: 'Ids should be positives numbers',
       });
     });
 
@@ -126,7 +176,7 @@ describe('SequenceController', () => {
       expect(service.saveSequence).not.toHaveBeenCalled();
       expect(response.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
       expect(response.send).toHaveBeenCalledWith({
-        message: 'Id numbers of the sequence should be positive',
+        message: 'Ids should be positives numbers',
       });
     });
   });

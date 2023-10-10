@@ -60,6 +60,7 @@ describe('SequenceService', () => {
     it('should return an empty array if there is not sequencies', async () => {
       jest.spyOn(sequenceService, 'getSequences').mockResolvedValue([] as any);
       expect(await sequenceService.getSequences()).toEqual([]);
+      expect(await sequenceService.getSequences()).toHaveLength(0);
     });
   });
 
