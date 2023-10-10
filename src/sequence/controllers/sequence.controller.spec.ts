@@ -2,8 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SequenceController } from './sequence.controller';
 import { SequenceService } from '../services/sequence.service';
 import { HttpStatus } from '@nestjs/common';
-import { ObjectId } from 'mongodb';
-import mongoose from 'mongoose';
 
 describe('SequenceController', () => {
   let controller: SequenceController;

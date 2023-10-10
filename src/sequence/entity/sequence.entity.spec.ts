@@ -1,6 +1,6 @@
 import { Sequence } from './sequence.entity';
 
-describe('Sequence', () => {
+describe('Sequence Entity', () => {
   let sequence: Sequence;
 
   beforeEach(() => {

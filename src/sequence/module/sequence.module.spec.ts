@@ -17,7 +17,7 @@ describe('SequenceModule', () => {
     sequenceModule = app.get<SequenceModule>(SequenceModule);
   });
 
-  describe('Initialization', () => {
+  describe('SequenceModule', () => {
     it('should be defined', () => {
       expect(sequenceModule).toBeDefined();
     });

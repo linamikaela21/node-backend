@@ -39,14 +39,13 @@ describe('SequenceService', () => {
       expect(sequenceService).toBeDefined();
     });
 
-    it('should save an array of saved sequencies', async () => {
+    it('should return the sequencies from the database', async () => {
       jest
         .spyOn(sequenceService, 'saveSequence')
         .mockResolvedValue('New sequence created successfully');
       jest
         .spyOn(sequenceService, 'getSequences')
         .mockResolvedValue(sequencesResponse as any);
-      expect(await sequenceService.getSequences()).toEqual(sequencesResponse);
       expect(await sequenceService.getSequences()).toEqual(sequencesResponse);
     });
 
@@ -89,6 +88,20 @@ describe('SequenceService', () => {
         .mockRejectedValue(new Error('Error saving the sequence'));
       await expect(
         sequenceService.saveSequence({} as any),
+      ).rejects.toThrowError('Error saving the sequence');
+    });
+
+    it('should throw an error if the sequence is not valid', async () => {
+      const newSequence = {
+        id: '1',
+        createdAt: '2021-09-01T00:00:00.000Z',
+        subSequences: [[1], [2], [1, 2]],
+      };
+      jest
+        .spyOn(sequenceService, 'saveSequence')
+        .mockRejectedValue(new Error('Error saving the sequence'));
+      await expect(
+        sequenceService.saveSequence(newSequence as any),
       ).rejects.toThrowError('Error saving the sequence');
     });
   });
